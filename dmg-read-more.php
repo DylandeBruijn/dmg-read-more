@@ -13,6 +13,8 @@
  * @package         Dmg_Read_More
  */
 
+namespace DMG\ReadMore;
+
 if (! defined('ABSPATH')) {
 	exit;
 }
@@ -20,7 +22,7 @@ if (! defined('ABSPATH')) {
 /**
  * Registers blocks
  */
-function dmg_read_more_register_blocks()
+function register_blocks()
 {
 	$build_dir = __DIR__ . '/build/blocks';
 	$manifest  = __DIR__ . '/build/blocks-manifest.php';
@@ -30,6 +32,7 @@ function dmg_read_more_register_blocks()
 		wp_register_block_types_from_metadata_collection($build_dir, $manifest);
 		return;
 	}
+
 
 	// WP 6.7: index the collection, then loop and register each block from metadata.
 	if (function_exists('wp_register_block_metadata_collection')) {
@@ -50,4 +53,4 @@ function dmg_read_more_register_blocks()
 		return;
 	}
 }
-add_action('init', 'dmg_read_more_register_blocks');
+add_action('init', __NAMESPACE__ . '\register_blocks');
