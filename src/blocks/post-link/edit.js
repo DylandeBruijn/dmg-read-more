@@ -2,16 +2,16 @@ import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, SearchControl, Spinner, Button } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
-import { useState } from '@wordpress/element';
+import { useDebouncedInput } from '@wordpress/compose';
 import './editor.scss';
 
 export default function Edit({ attributes, setAttributes }) {
 	const { postTitle, postUrl } = attributes;
-	const [searchTerm, setSearchTerm] = useState("");
+	const [searchTerm, setSearchTerm, debouncedSearchTerm] = useDebouncedInput("");
 
 	const { posts, isResolving } = useSelect(
 		(select) => {
-			if (!searchTerm) {
+			if (!debouncedSearchTerm) {
 				return { posts: [], isResolving: false };
 			}
 
@@ -21,7 +21,7 @@ export default function Edit({ attributes, setAttributes }) {
 				status: 'publish',
 				per_page: 5,
 				_fields: ['id', 'title', 'link'],
-				search: searchTerm,
+				search: debouncedSearchTerm,
 			};
 
 			return {
@@ -29,7 +29,7 @@ export default function Edit({ attributes, setAttributes }) {
 				isResolving: checkResolving('getEntityRecords', ['postType', 'post', query]),
 			};
 		},
-		[searchTerm]
+		[debouncedSearchTerm]
 	);
 
 	const handlePostUnlink = () => {
