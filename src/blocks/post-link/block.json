@@ -8,6 +8,15 @@
 	"icon": "admin-links",
 	"description": "Insert a stylized link to a published post.",
 	"example": {},
+	"attributes": {
+		"postTitle": {
+			"type": "string"
+		},
+		"postUrl": {
+			"type": "string",
+      "default": "#"
+		}
+	},
 	"supports": {
 		"html": false
 	},
