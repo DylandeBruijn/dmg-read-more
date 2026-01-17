@@ -17,8 +17,8 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 export default function save() {
 	return (
-		<p { ...useBlockProps.save() }>
-			{ 'Post Link – hello from the saved content!' }
+		<p {...useBlockProps.save({ className: 'dmg-read-more' })}>
+			<a href="#">Read More</a>
 		</p>
 	);
 }

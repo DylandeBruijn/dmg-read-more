@@ -31,8 +31,10 @@ import './editor.scss';
  */
 export default function Edit() {
 	return (
-		<p { ...useBlockProps() }>
-			{ __( 'Post Link – hello from the editor!', 'post-link' ) }
+		<p {...useBlockProps({ className: 'dmg-read-more' })}>
+			<a href="#">
+				Read More
+			</a>
 		</p>
 	);
 }

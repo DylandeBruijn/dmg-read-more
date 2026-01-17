@@ -4,14 +4,14 @@
 	"name": "dmg-read-more/post-link",
 	"version": "0.1.0",
 	"title": "Post Link",
-	"category": "widgets",
-	"icon": "smiley",
-	"description": "Example block scaffolded with Create Block tool.",
+	"category": "theme",
+	"icon": "admin-links",
+	"description": "Insert a stylized link to a published post.",
 	"example": {},
 	"supports": {
 		"html": false
 	},
-	"textdomain": "post-link",
+	"textdomain": "dmg-read-more",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
