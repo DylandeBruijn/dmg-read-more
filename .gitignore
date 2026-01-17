@@ -1,10 +1,36 @@
-.DS_Store
-phpcs.xml
-phpunit.xml
-Thumbs.db
-wp-cli.local.yml
+# Dependencies
 node_modules/
 vendor/
-*.sql
-*.tar.gz
+
+# Build output (generated files)
+build/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# WordPress
+wp-cli.local.yml
+phpcs.xml
+phpunit.xml
+
+# Logs
+*.log
+npm-debug.log*
+
+# Archives
 *.zip
+*.tar.gz
+*.sql
+
+# Environment
+.env
+.env.local
