@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import { stripHtmlTags } from './helpers';
 
-const SelectedPost = ( { postTitle, onUnlink } ) => {
+export default function SelectedPost( { postTitle, onUnlink } ) {
 	return (
 		<div
 			style={ {
@@ -33,6 +33,4 @@ const SelectedPost = ( { postTitle, onUnlink } ) => {
 			</Button>
 		</div>
 	);
-};
-
-export default SelectedPost;
+}

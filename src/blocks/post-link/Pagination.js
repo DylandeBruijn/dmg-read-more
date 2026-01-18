@@ -1,7 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 
-const Pagination = ( { currentPage, totalPages, onPageChange } ) => {
+export default function Pagination( {
+	currentPage,
+	totalPages,
+	onPageChange,
+} ) {
 	return (
 		<div
 			style={ {
@@ -66,6 +70,4 @@ const Pagination = ( { currentPage, totalPages, onPageChange } ) => {
 			</Button>
 		</div>
 	);
-};
-
-export default Pagination;
+}

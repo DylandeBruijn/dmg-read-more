@@ -3,14 +3,14 @@ import { Button } from '@wordpress/components';
 import Pagination from './Pagination';
 import { stripHtmlTags } from './helpers';
 
-const PostsList = ( {
+export default function PostsList( {
 	posts,
 	onPostSelect,
 	isSearching,
 	currentPage,
 	totalPages,
 	onPageChange,
-} ) => {
+} ) {
 	return (
 		<>
 			<span
@@ -47,6 +47,4 @@ const PostsList = ( {
 			) }
 		</>
 	);
-};
-
-export default PostsList;
+}
