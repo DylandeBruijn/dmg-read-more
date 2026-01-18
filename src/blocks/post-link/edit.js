@@ -1,6 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, SearchControl, Spinner, Button, RadioControl } from '@wordpress/components';
+import {
+	PanelBody,
+	SearchControl,
+	Spinner,
+	Button,
+	RadioControl,
+} from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useDebouncedInput } from '@wordpress/compose';
 import { useState } from '@wordpress/element';
@@ -13,16 +19,18 @@ const SEARCH_TYPE = {
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { postTitle, postUrl } = attributes;
-	const [ searchTerm, setSearchTerm, debouncedSearchTerm ] = useDebouncedInput( '' );
+	const [ searchTerm, setSearchTerm, debouncedSearchTerm ] =
+		useDebouncedInput( '' );
 	const [ searchType, setSearchType ] = useState( SEARCH_TYPE.TITLE );
 
 	const { posts, isResolving } = useSelect(
-		select => {
+		( select ) => {
 			if ( ! debouncedSearchTerm ) {
 				return { posts: [], isResolving: false };
 			}
 
-			const { getEntityRecords, isResolving: checkResolving } = select( 'core' );
+			const { getEntityRecords, isResolving: checkResolving } =
+				select( 'core' );
 
 			const query = {
 				status: 'publish',
@@ -46,7 +54,11 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			return {
 				posts: getEntityRecords( 'postType', 'post', query ) || [],
-				isResolving: checkResolving( 'getEntityRecords', [ 'postType', 'post', query ] ),
+				isResolving: checkResolving( 'getEntityRecords', [
+					'postType',
+					'post',
+					query,
+				] ),
 			};
 		},
 		[ debouncedSearchTerm, searchType ]
@@ -57,7 +69,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		setSearchTerm( '' );
 	};
 
-	const handlePostSelect = selectedPost => {
+	const handlePostSelect = ( selectedPost ) => {
 		setAttributes( {
 			postId: selectedPost.id,
 			postTitle: selectedPost.title.rendered,
@@ -112,12 +124,21 @@ export default function Edit( { attributes, setAttributes } ) {
 						placeholder={
 							searchType === SEARCH_TYPE.ID
 								? __( 'Search for a post ID…', 'dmg-read-more' )
-								: __( 'Search for a post title…', 'dmg-read-more' )
+								: __(
+										'Search for a post title…',
+										'dmg-read-more'
+								  )
 						}
 						help={
 							searchType === SEARCH_TYPE.ID
-								? __( 'Enter a numeric post ID.', 'dmg-read-more' )
-								: __( 'Search for a post title.', 'dmg-read-more' )
+								? __(
+										'Enter a numeric post ID.',
+										'dmg-read-more'
+								  )
+								: __(
+										'Search for a post title.',
+										'dmg-read-more'
+								  )
 						}
 					/>
 					{ isResolving && <Spinner /> }
@@ -133,15 +154,20 @@ export default function Edit( { attributes, setAttributes } ) {
 								Search Results:
 							</span>
 							<ul style={ { margin: 0 } }>
-								{ posts.map( post => (
+								{ posts.map( ( post ) => (
 									<li key={ post.id } style={ { margin: 0 } }>
 										<Button
 											variant="link"
-											onClick={ () => handlePostSelect( post ) }
+											onClick={ () =>
+												handlePostSelect( post )
+											}
 											style={ { height: 'fit-content' } }
 										>
 											{ post.title.rendered ||
-												__( '(No title)', 'dmg-read-more' ) }
+												__(
+													'(No title)',
+													'dmg-read-more'
+												) }
 										</Button>
 									</li>
 								) ) }
