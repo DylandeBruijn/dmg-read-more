@@ -18,7 +18,7 @@ const SEARCH_TYPE = {
 };
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { postId, postTitle, postUrl } = attributes;
+	const { postTitle, postUrl } = attributes;
 	const [ searchTerm, setSearchTerm, debouncedSearchTerm ] =
 		useDebouncedInput( '' );
 	const [ searchType, setSearchType ] = useState( SEARCH_TYPE.TITLE );
@@ -123,12 +123,9 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ setSearchTerm }
 						placeholder={
 							searchType === SEARCH_TYPE.ID
-								? __(
-										'Search for a post ID...',
-										'dmg-read-more'
-								  )
+								? __( 'Search for a post ID…', 'dmg-read-more' )
 								: __(
-										'Search for a post title...',
+										'Search for a post title…',
 										'dmg-read-more'
 								  )
 						}

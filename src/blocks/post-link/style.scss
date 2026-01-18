@@ -6,9 +6,10 @@
  */
 
 .dmg-read-more {
+
 	a {
 		display: block;
-		color: #000000;
+		color: #000;
 		font-weight: 700;
 		text-decoration: none;
 		transition: background-color 0.2s ease-out;
@@ -19,7 +20,7 @@
 			text-decoration: underline;
 			text-underline-offset: 0.25em;
 			background-color: #1a56db;
-			color: #ffffff;
+			color: #fff;
 		}
 	}
 }
