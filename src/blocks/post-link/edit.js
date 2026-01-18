@@ -93,12 +93,18 @@ export default function Edit( { attributes, setAttributes } ) {
 								gap: '16px',
 							} }
 						>
-							<span>
+							<div
+								style={ {
+									display: 'flex',
+									flexDirection: 'column',
+									gap: '8px',
+								} }
+							>
 								<span style={ { fontWeight: 500 } }>
 									{ __( 'Selected Post:', 'dmg-read-more' ) }
 								</span>{ ' ' }
-								{ postTitle }
-							</span>
+								<span>{ postTitle }</span>
+							</div>
 							<Button
 								variant="link"
 								onClick={ handlePostUnlink }
