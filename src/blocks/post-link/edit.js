@@ -9,7 +9,8 @@ import {
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useDebouncedInput } from '@wordpress/compose';
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
+import Pagination from './Pagination';
 import './editor.scss';
 
 const SEARCH_TYPE = {
@@ -22,15 +23,24 @@ export default function Edit( { attributes, setAttributes } ) {
 	const [ searchTerm, setSearchTerm, debouncedSearchTerm ] =
 		useDebouncedInput( '' );
 	const [ searchType, setSearchType ] = useState( SEARCH_TYPE.TITLE );
+	const [ currentPage, setCurrentPage ] = useState( 1 );
 
-	const { posts, isResolving } = useSelect(
+	useEffect( () => {
+		setCurrentPage( 1 );
+	}, [ debouncedSearchTerm, searchType ] );
+
+	const { posts, totalPages, isResolving } = useSelect(
 		( select ) => {
-			const { getEntityRecords, isResolving: checkResolving } =
-				select( 'core' );
+			const {
+				getEntityRecords,
+				getEntityRecordsTotalPages,
+				isResolving: checkResolving,
+			} = select( 'core' );
 
 			const query = {
 				status: 'publish',
 				per_page: 5,
+				page: currentPage,
 				_fields: [ 'id', 'title', 'link' ],
 			};
 
@@ -40,6 +50,12 @@ export default function Edit( { attributes, setAttributes } ) {
 
 				return {
 					posts: getEntityRecords( 'postType', 'post', query ) || [],
+					totalPages:
+						getEntityRecordsTotalPages(
+							'postType',
+							'post',
+							query
+						) || 1,
 					isResolving: checkResolving( 'getEntityRecords', [
 						'postType',
 						'post',
@@ -52,7 +68,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				const isNumeric = /^\d+$/.test( debouncedSearchTerm );
 
 				if ( ! isNumeric ) {
-					return { posts: [], isResolving: false };
+					return { posts: [], totalPages: 1, isResolving: false };
 				}
 
 				query.include = [ parseInt( debouncedSearchTerm ) ];
@@ -64,6 +80,9 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			return {
 				posts: getEntityRecords( 'postType', 'post', query ) || [],
+				totalPages:
+					getEntityRecordsTotalPages( 'postType', 'post', query ) ||
+					1,
 				isResolving: checkResolving( 'getEntityRecords', [
 					'postType',
 					'post',
@@ -71,7 +90,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				] ),
 			};
 		},
-		[ debouncedSearchTerm, searchType ]
+		[ debouncedSearchTerm, searchType, currentPage ]
 	);
 
 	const handlePostUnlink = () => {
@@ -179,6 +198,13 @@ export default function Edit( { attributes, setAttributes } ) {
 									</li>
 								) ) }
 							</ul>
+							{ totalPages > 1 && debouncedSearchTerm && (
+								<Pagination
+									currentPage={ currentPage }
+									totalPages={ totalPages }
+									onPageChange={ setCurrentPage }
+								/>
+							) }
 						</>
 					) }
 				</PanelBody>
