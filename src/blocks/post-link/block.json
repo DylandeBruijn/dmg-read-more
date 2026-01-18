@@ -14,7 +14,7 @@
 		},
 		"postUrl": {
 			"type": "string",
-      "default": "#"
+			"default": "#"
 		}
 	},
 	"supports": {
