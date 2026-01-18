@@ -1,97 +1,186 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, SearchControl, Spinner, Button } from '@wordpress/components';
+import {
+	PanelBody,
+	SearchControl,
+	Spinner,
+	Button,
+	RadioControl,
+} from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useDebouncedInput } from '@wordpress/compose';
+import { useState } from '@wordpress/element';
 import './editor.scss';
 
-export default function Edit({ attributes, setAttributes }) {
-	const { postTitle, postUrl } = attributes;
-	const [searchTerm, setSearchTerm, debouncedSearchTerm] = useDebouncedInput("");
+const SEARCH_TYPE = {
+	TITLE: 'title',
+	ID: 'id',
+};
+
+export default function Edit( { attributes, setAttributes } ) {
+	const { postId, postTitle, postUrl } = attributes;
+	const [ searchTerm, setSearchTerm, debouncedSearchTerm ] =
+		useDebouncedInput( '' );
+	const [ searchType, setSearchType ] = useState( SEARCH_TYPE.TITLE );
 
 	const { posts, isResolving } = useSelect(
-		(select) => {
-			if (!debouncedSearchTerm) {
+		( select ) => {
+			if ( ! debouncedSearchTerm ) {
 				return { posts: [], isResolving: false };
 			}
 
-			const { getEntityRecords, isResolving: checkResolving } = select('core');
+			const { getEntityRecords, isResolving: checkResolving } =
+				select( 'core' );
 
 			const query = {
 				status: 'publish',
 				per_page: 5,
-				_fields: ['id', 'title', 'link'],
-				search: debouncedSearchTerm,
+				_fields: [ 'id', 'title', 'link' ],
 			};
 
+			if ( searchType === SEARCH_TYPE.ID ) {
+				const isNumeric = /^\d+$/.test( debouncedSearchTerm );
+
+				if ( ! isNumeric ) {
+					return { posts: [], isResolving: false };
+				}
+
+				query.include = [ parseInt( debouncedSearchTerm ) ];
+			}
+
+			if ( searchType === SEARCH_TYPE.TITLE ) {
+				query.search = debouncedSearchTerm;
+			}
+
 			return {
-				posts: getEntityRecords('postType', 'post', query) || [],
-				isResolving: checkResolving('getEntityRecords', ['postType', 'post', query]),
+				posts: getEntityRecords( 'postType', 'post', query ) || [],
+				isResolving: checkResolving( 'getEntityRecords', [
+					'postType',
+					'post',
+					query,
+				] ),
 			};
 		},
-		[debouncedSearchTerm]
+		[ debouncedSearchTerm, searchType ]
 	);
 
 	const handlePostUnlink = () => {
-		setAttributes({ postTitle: "", postUrl: "#" });
-		setSearchTerm("");
+		setAttributes( { postId: '', postTitle: '', postUrl: '#' } );
+		setSearchTerm( '' );
 	};
 
-	const handlePostSelect = (selectedPost) => {
-		setSearchTerm('');
-		setAttributes({
+	const handlePostSelect = ( selectedPost ) => {
+		setAttributes( {
 			postId: selectedPost.id,
 			postTitle: selectedPost.title.rendered,
 			postUrl: selectedPost.link,
-		});
+		} );
+		setSearchTerm( '' );
 	};
 
-	const linkText = postTitle ? `Read More: ${postTitle}` : 'Read More';
+	const linkText = postTitle ? `Read More: ${ postTitle }` : 'Read More';
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Settings" initialOpen={true}>
-					{postTitle && (
-						<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+				<PanelBody title="Settings" initialOpen={ true }>
+					{ postTitle && (
+						<div
+							style={ {
+								display: 'flex',
+								justifyContent: 'space-between',
+								marginBottom: '16px',
+								gap: '16px',
+							} }
+						>
 							<span>
-								<span style={{ fontWeight: 500 }}>{__('Selected Post:', 'dmg-read-more')}</span> {postTitle}
+								<span style={ { fontWeight: 500 } }>
+									{ __( 'Selected Post:', 'dmg-read-more' ) }
+								</span>{ ' ' }
+								{ postTitle }
 							</span>
-							<Button variant="link" onClick={handlePostUnlink}>Unlink</Button>
+							<Button
+								variant="link"
+								onClick={ handlePostUnlink }
+								style={ { height: 'fit-content' } }
+							>
+								Unlink
+							</Button>
 						</div>
-					)}
-					<SearchControl
-						label={__('Search Posts', 'dmg-read-more')}
-						help={__('Search for a post to link to.', 'dmg-read-more')}
-						value={searchTerm}
-						onChange={setSearchTerm}
-						placeholder={__('Search post...', 'dmg-read-more')}
-
+					) }
+					<RadioControl
+						label={ __( 'Search By', 'dmg-read-more' ) }
+						selected={ searchType }
+						options={ [
+							{ label: 'Title', value: SEARCH_TYPE.TITLE },
+							{ label: 'ID', value: SEARCH_TYPE.ID },
+						] }
+						onChange={ setSearchType }
 					/>
-					{isResolving && <Spinner />}
-					{!isResolving && posts.length > 0 && (
+					<SearchControl
+						label={ __( 'Search Posts', 'dmg-read-more' ) }
+						value={ searchTerm }
+						onChange={ setSearchTerm }
+						placeholder={
+							searchType === SEARCH_TYPE.ID
+								? __(
+										'Search for a post ID...',
+										'dmg-read-more'
+								  )
+								: __(
+										'Search for a post title...',
+										'dmg-read-more'
+								  )
+						}
+						help={
+							searchType === SEARCH_TYPE.ID
+								? __(
+										'Enter a numeric post ID.',
+										'dmg-read-more'
+								  )
+								: __(
+										'Search for a post title.',
+										'dmg-read-more'
+								  )
+						}
+					/>
+					{ isResolving && <Spinner /> }
+					{ ! isResolving && posts.length > 0 && (
 						<>
-							<span style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
+							<span
+								style={ {
+									display: 'block',
+									marginBottom: '8px',
+									fontWeight: 500,
+								} }
+							>
 								Search Results:
 							</span>
-							<ul style={{ margin: 0 }}>
-								{posts.map((post) => (
-									<li
-										key={post.id}
-										style={{ margin: 0 }}
-									>
-										<Button variant="link" onClick={() => handlePostSelect(post)}>
-											{post.title.rendered || __('(No title)', 'dmg-read-more')}
+							<ul style={ { margin: 0 } }>
+								{ posts.map( ( post ) => (
+									<li key={ post.id } style={ { margin: 0 } }>
+										<Button
+											variant="link"
+											onClick={ () =>
+												handlePostSelect( post )
+											}
+											style={ { height: 'fit-content' } }
+										>
+											{ post.title.rendered ||
+												__(
+													'(No title)',
+													'dmg-read-more'
+												) }
 										</Button>
 									</li>
-								))}
+								) ) }
 							</ul>
 						</>
-					)}
+					) }
 				</PanelBody>
 			</InspectorControls>
-			<p {...useBlockProps({ className: 'dmg-read-more' })}>
-				<a href={postUrl}>{linkText}</a>
+			<p { ...useBlockProps( { className: 'dmg-read-more' } ) }>
+				<a href={ postUrl }>{ linkText }</a>
 			</p>
 		</>
 	);
