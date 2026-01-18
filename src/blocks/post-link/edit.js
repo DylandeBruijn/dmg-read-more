@@ -10,6 +10,7 @@ import { useDebouncedInput } from '@wordpress/compose';
 import { useSelect } from '@wordpress/data';
 import { useState, useEffect } from '@wordpress/element';
 
+import { stripHtmlTags } from './helpers';
 import { SEARCH_TYPE } from './constants';
 import SelectedPost from './SelectedPost';
 import PostsList from './PostsList';
@@ -99,7 +100,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const handlePostSelect = ( selectedPost ) => {
 		setAttributes( {
 			postId: selectedPost.id,
-			postTitle: selectedPost.title.rendered,
+			postTitle: stripHtmlTags( selectedPost.title.rendered ),
 			postUrl: selectedPost.link,
 		} );
 		setSearchTerm( '' );

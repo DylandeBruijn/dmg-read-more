@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import Pagination from './Pagination';
+import { stripHtmlTags } from './helpers';
 
 const PostsList = ( {
 	posts,
@@ -31,7 +32,7 @@ const PostsList = ( {
 							onClick={ () => onPostSelect( post ) }
 							style={ { height: 'fit-content' } }
 						>
-							{ post.title.rendered ||
+							{ stripHtmlTags( post.title.rendered ) ||
 								__( '(No title)', 'dmg-read-more' ) }
 						</Button>
 					</li>

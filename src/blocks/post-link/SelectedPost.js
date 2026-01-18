@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
+import { stripHtmlTags } from './helpers';
 
 const SelectedPost = ( { postTitle, onUnlink } ) => {
 	return (
@@ -21,7 +22,7 @@ const SelectedPost = ( { postTitle, onUnlink } ) => {
 				<span style={ { fontWeight: 500 } }>
 					{ __( 'Selected Post:', 'dmg-read-more' ) }
 				</span>
-				<span>{ postTitle }</span>
+				<span>{ stripHtmlTags( postTitle ) }</span>
 			</div>
 			<Button
 				variant="link"
