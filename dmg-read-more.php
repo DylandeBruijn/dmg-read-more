@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name:     DMG Read More
  * Plugin URI:      https://github.com/DylandeBruijn/dmg-read-more
