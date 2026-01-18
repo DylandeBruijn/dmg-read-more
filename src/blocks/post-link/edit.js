@@ -152,6 +152,12 @@ export default function Edit( { attributes, setAttributes } ) {
 							onPageChange={ setCurrentPage }
 						/>
 					) }
+
+					{ ! isResolving && posts.length === 0 && (
+						<span style={ { padding: '12px 0', color: '#757575' } }>
+							{ __( 'No posts found.', 'dmg-read-more' ) }
+						</span>
+					) }
 				</PanelBody>
 			</InspectorControls>
 			<p { ...useBlockProps( { className: 'dmg-read-more' } ) }>
