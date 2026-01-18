@@ -129,17 +129,6 @@ export default function Edit( { attributes, setAttributes } ) {
 										'dmg-read-more'
 								  )
 						}
-						help={
-							searchType === SEARCH_TYPE.ID
-								? __(
-										'Enter a numeric post ID.',
-										'dmg-read-more'
-								  )
-								: __(
-										'Search for a post title.',
-										'dmg-read-more'
-								  )
-						}
 					/>
 					{ isResolving && <Spinner /> }
 					{ ! isResolving && posts.length > 0 && (
