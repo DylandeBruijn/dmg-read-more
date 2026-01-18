@@ -13,6 +13,7 @@
  */
 
 namespace DMG\ReadMore;
+use WP_CLI;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -51,3 +52,8 @@ function register_blocks() {
 	}
 }
 add_action( 'init', __NAMESPACE__ . '\register_blocks' );
+
+if ( defined( 'WP_CLI' ) && \WP_CLI ) {
+	require_once __DIR__ . '/includes/class-dmg-read-more-cli.php';
+	WP_CLI::add_command( 'dmg-read-more search', __NAMESPACE__ . '\CLI\Search_Command' );
+}
