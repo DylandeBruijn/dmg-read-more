@@ -25,10 +25,6 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const { posts, isResolving } = useSelect(
 		( select ) => {
-			if ( ! debouncedSearchTerm ) {
-				return { posts: [], isResolving: false };
-			}
-
 			const { getEntityRecords, isResolving: checkResolving } =
 				select( 'core' );
 
@@ -37,6 +33,20 @@ export default function Edit( { attributes, setAttributes } ) {
 				per_page: 5,
 				_fields: [ 'id', 'title', 'link' ],
 			};
+
+			if ( ! debouncedSearchTerm ) {
+				query.orderby = 'date';
+				query.order = 'desc';
+
+				return {
+					posts: getEntityRecords( 'postType', 'post', query ) || [],
+					isResolving: checkResolving( 'getEntityRecords', [
+						'postType',
+						'post',
+						query,
+					] ),
+				};
+			}
 
 			if ( searchType === SEARCH_TYPE.ID ) {
 				const isNumeric = /^\d+$/.test( debouncedSearchTerm );
@@ -146,7 +156,9 @@ export default function Edit( { attributes, setAttributes } ) {
 									fontWeight: 500,
 								} }
 							>
-								Search Results:
+								{ debouncedSearchTerm
+									? __( 'Found Posts:', 'dmg-read-more' )
+									: __( 'Recent Posts:', 'dmg-read-more' ) }
 							</span>
 							<ul style={ { margin: 0 } }>
 								{ posts.map( ( post ) => (
