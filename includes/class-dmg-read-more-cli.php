@@ -112,7 +112,6 @@ class Search_Command {
 			),
 			'no_found_rows'          => true,
 			'fields'                 => 'ids',
-			'suppress_filters'       => true,
 			'update_post_term_cache' => false,
 			'update_post_meta_cache' => false,
 			'cache_results'          => false,
@@ -137,7 +136,7 @@ class Search_Command {
 	 * @param string $where The existing WHERE clause.
 	 * @return string Modified WHERE clause with block search condition.
 	 */
-	private function filter_posts_where( $where ) {
+	public function filter_posts_where( $where ) {
 		global $wpdb;
 
 		$escaped_pattern = $wpdb->esc_like( $this->block_comment_start );
