@@ -28,7 +28,7 @@ class Search_Command {
 	 * ## OPTIONS
 	 *
 	 * <block-name>
-	 * : The block name to search for (e.g., 'core/paragraph' or 'dmg-read-more/post-link').
+	 * : The block name to search for (e.g., 'paragraph' or 'dmg-read-more/post-link').
 	 *
 	 * [--post_type=<post_type>]
 	 * : Limit search to a specific post type.
@@ -63,7 +63,7 @@ class Search_Command {
 	 *     $ wp dmg-read-more search dmg-read-more/post-link --date-after=2024-01-01 --date-before=2024-12-31
 	 *
 	 *     # Find pages containing a core paragraph block
-	 *     $ wp dmg-read-more search core/paragraph --post_type=page
+	 *     $ wp dmg-read-more search paragraph --post_type=page
 	 *
 	 *     # Find posts from the last 7 days
 	 *     $ wp dmg-read-more search dmg-read-more/post-link --date-after=2026-01-11
