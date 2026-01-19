@@ -77,10 +77,6 @@ class Search_Command {
 	 * @when after_wp_load
 	 */
 	public function __invoke( $args, $assoc_args ) {
-		if ( empty( $args[0] ) ) {
-			WP_CLI::error( 'Please provide a block name to search for.' );
-		}
-
 		$block_name = $args[0];
 
 		$assoc_args = wp_parse_args(
