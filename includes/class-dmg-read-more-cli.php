@@ -89,6 +89,21 @@ class Search_Command {
 			)
 		);
 
+		if ( ! post_type_exists( $assoc_args['post_type'] ) ) {
+			WP_CLI::error( sprintf( 'Post type "%s" does not exist.', $assoc_args['post_type'] ) );
+		}
+
+		if ( ! strtotime( $assoc_args['date-after'] ) ) {
+			WP_CLI::error( 'Invalid --date-after format. Use YYYY-MM-DD.' );
+		}
+		if ( ! strtotime( $assoc_args['date-before'] ) ) {
+			WP_CLI::error( 'Invalid --date-before format. Use YYYY-MM-DD.' );
+		}
+
+		if ( strtotime( $assoc_args['date-after'] ) > strtotime( $assoc_args['date-before'] ) ) {
+			WP_CLI::error( 'The --date-after cannot be later than --date-before.' );
+		}
+
 		$this->block_comment_start = '<!-- wp:' . $block_name . ' ';
 
 		add_filter( 'posts_where', array( $this, 'filter_posts_where' ) );
@@ -118,6 +133,12 @@ class Search_Command {
 		remove_filter( 'posts_where', array( $this, 'filter_posts_where' ) );
 
 		if ( empty( $query->posts ) ) {
+			WP_CLI::warning( sprintf(
+				'No posts found with block "%s" between %s and %s.',
+				$block_name,
+				$assoc_args['date-after'],
+				$assoc_args['date-before']
+			) );
 			return;
 		}
 
